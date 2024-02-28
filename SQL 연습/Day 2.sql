@@ -56,5 +56,12 @@ WHERE country = 'KR'
 AND (WID BETWEEN 'W10500' AND 'W11000') -- 문자도 부등호, BETWEEN 계산이 가능함
 
 --5 구매 수량이 5개 이상이면 regular, 10개 이상이면 large, 5개 미만인 경우 small로 정의한 buy_size 별로 구매 건수와 매출 총액, 구매 유저 수를 구하세요
-SELECT *
-FROM project.daily_sales 
+SELECT CASE WHEN buy_count >= 10 THEN 'large'
+	WHEN buy_count >= 5 THEN 'regular'
+	WHEN buy_count < 5 THEN 'small'
+	ELSE '' END buy_size,
+	SUM(buy_count) total_cnt,
+	SUM(revenue) total_rev,
+	COUNT(DISTINCT WID) PU
+FROM project.daily_sales
+GROUP BY 1
